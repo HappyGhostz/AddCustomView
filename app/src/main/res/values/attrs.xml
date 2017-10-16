@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AddView -->
+    <declare-styleable name="AddCustomView">
+        <attr name="av_criclecolor" format="color"/>
+        <attr name="av_background" format="color"/>
+        <attr name="av_lineColor" format="color"/>
+        <attr name="av_arc_size" format="dimension"/>
+        <attr name="av_line_size" format="dimension"/>
+        <attr name="av_animation_time" format="integer"/>
+        <attr name="av_moveH" format="boolean"/>
+    </declare-styleable>
+
+</resources>
