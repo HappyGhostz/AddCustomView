@@ -19,7 +19,10 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            app:av_arc_size = "3sp"/>
+            app:av_arc_size = "3sp"
+            app:av_moveH="true"
+            app:av_line_size = "5sp"
+            app:av_animation_time ="1"/>
 
     </LinearLayout>
 
