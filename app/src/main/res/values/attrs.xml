@@ -10,6 +10,7 @@
         <attr name="av_line_size" format="dimension"/>
         <attr name="av_animation_time" format="integer"/>
         <attr name="av_moveH" format="boolean"/>
+        <attr name="av_isGradient" format="boolean"/>
     </declare-styleable>
 
 </resources>
