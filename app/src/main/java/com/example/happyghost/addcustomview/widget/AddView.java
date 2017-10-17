@@ -198,7 +198,6 @@ public class AddView extends View {
 //            mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", 90, 0);
 //            mAngleV1Animator.setDuration(mEndTime*1000);
 //            mAngleV1Animator.start();
-        invalidate();
 //
 
     }
