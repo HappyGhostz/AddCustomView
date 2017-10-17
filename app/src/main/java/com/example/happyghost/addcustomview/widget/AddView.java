@@ -171,10 +171,6 @@ public class AddView extends View {
         float sinH =(float) Math.sin(mAngleH1*Math.PI/180);
         float cosH =(float) Math.cos(mAngleH1*Math.PI/180);
 
-        float mStartXH = mRadius * (1 - cosH * 3 / 5);
-        float mStartXV = mRadius*(1+sinV*3/5);
-        float mStartYV = mRadius*(1-cosV*3/5);
-
         canvas.drawLine(mRadius*(1-cosH*3/5),mRadius*(1-sinH*3/5),mRadius*(1+cosH*3/5),mRadius*(1+sinH*3/5),mLinePaint);
         canvas.drawLine(mRadius*(1+sinV*3/5), mRadius*(1-cosV*3/5) ,mRadius*(1-sinV*3/5),mRadius*(1+cosV*3/5),mLinePaint);
     }
@@ -182,24 +178,16 @@ public class AddView extends View {
 
     public void startAnimationV(){
 
-            if(mAngleV1Animator==null){
-                mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", mDisAngle, mDisAngle+90);
-            }
-            mAngleV1Animator.setDuration(mEndTime*1000);
-            mAngleV1Animator.start();
-//            mAngleV1=mAngleV1+90;
-//            if(mAngleH1Animator==null){
-//                mAngleH1Animator = ObjectAnimator.ofFloat(this, "mAngleH1", 0, 360);
-//            }
-//            mAngleH1Animator.setDuration(mEndTime*1000);
-//            mAngleH1Animator.start();
-            mDisAngle = mDisAngle+90;
 
-//            mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", 90, 0);
-//            mAngleV1Animator.setDuration(mEndTime*1000);
-//            mAngleV1Animator.start();
-//
-
+        mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", mDisAngle, mDisAngle+90);
+        mAngleV1Animator.setDuration(mEndTime*1000);
+        mAngleV1Animator.start();
+        if(mAngleH1Animator==null&&mHmove){
+            mAngleH1Animator = ObjectAnimator.ofFloat(this, "mAngleH1", 0, 360);
+        }
+        mAngleH1Animator.setDuration(mEndTime*1000);
+        mAngleH1Animator.start();
+        mDisAngle = mDisAngle+90;
     }
     public void setMAngleV1(float mAngleV){
         this.mAngleV1 = mAngleV;
