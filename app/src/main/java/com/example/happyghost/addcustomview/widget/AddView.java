@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.example.happyghost.addcustomview.R;
@@ -47,6 +48,7 @@ public class AddView extends View {
 
 
     private boolean mVmoveOne;
+    private float mSubDis = 0 ;
 
     public AddView(Context context) {
         this(context,null);
@@ -96,11 +98,10 @@ public class AddView extends View {
                 if(mAngleV1Animator!=null&&mAngleV1Animator.isRunning()){
                     return;
                 }else {
-                    startAnimationV();
-                    isAdd=!isAdd;
                     if(mListener!=null){
                         mListener.onAddViewClick();
                     }
+                    startAnimationV();
                 }
             }
         };
@@ -214,14 +215,28 @@ public class AddView extends View {
         float sinH =(float) Math.sin(mAngleH1*Math.PI/180);
         float cosH =(float) Math.cos(mAngleH1*Math.PI/180);
 
+
         canvas.drawLine(mRadius*(1-cosH*3/5),mRadius*(1-sinH*3/5),mRadius*(1+cosH*3/5),mRadius*(1+sinH*3/5),mLinePaint);
         canvas.drawLine(mRadius*(1+sinV*3/5), mRadius*(1-cosV*3/5) ,mRadius*(1-sinV*3/5),mRadius*(1+cosV*3/5),mLinePaint);
+        int x1 = (int) (mRadius * (1 - cosH * 3 / 5));
+        int x2 = (int) (mRadius*(1+sinV*3/5));
+        int y1 = (int) (mRadius*(1-sinH*3/5));
+        int y2 = (int) (mRadius*(1-cosV*3/5));
+        if(x1==x2&&y1==y2){
+            isAdd=false;
+        }else {
+            isAdd=true;
+        }
     }
 
 
     public void startAnimationV(){
-        if(mVmoveOne){
+        if(mVmoveOne&&isAdd){
             mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", 0, 360);
+            mAngleV1Animator.setDuration(mEndTime*1000);
+            mAngleV1Animator.start();
+        }else if(mVmoveOne&&!isAdd) {
+            mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", mDisAngle, mDisAngle+180);
             mAngleV1Animator.setDuration(mEndTime*1000);
             mAngleV1Animator.start();
         }else {
@@ -235,6 +250,7 @@ public class AddView extends View {
             mAngleH1Animator.setDuration(mEndTime*1000);
             mAngleH1Animator.start();
         }
+        mSubDis = mSubDis+90;
         mDisAngle = mDisAngle+90;
     }
     public void setMAngleV1(float mAngleV){

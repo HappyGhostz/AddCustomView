@@ -164,10 +164,12 @@ public class MainActivity extends AppCompatActivity {
         set.start();
         return set;
     }
-
+    private AnimatorSet animatorSet;
     public class AddViewClick implements AddView.OnAddviewClickListener{
 
         private final AddView newAddView;
+
+
         public AddViewClick(AddView addView){
             this.newAddView = addView;
         }
@@ -176,33 +178,38 @@ public class MainActivity extends AppCompatActivity {
         public void onAddViewClick() {
             int id = newAddView.getId();
             final EditText viewById = (EditText)findViewById((id+1) * 100000);
-            AnimatorSet animatorSet = getAnimatorSet(viewById, "alpha", "translationY", 1, 0, 50);
-            animatorSet.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
+            if(animatorSet!=null&&animatorSet.isRunning()){
+                newAddView.setmVmoveOne(true);
+                return;
+            }else {
+                animatorSet = getAnimatorSet(viewById, "alpha", "translationY", 1, 0, 50);
+                animatorSet.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    viewById.setVisibility(View.GONE);
-                }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        viewById.setVisibility(View.GONE);
+                        getValueAnmition(50*(1+currentSub)+10,currentSub*50+10);
+                        mAddView.startAnimationV();
+                    }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-                }
-            });
-            getValueAnmition(50*(1+currentSub)+10-50,currentSub*50+10-50);
-            mAddView.startAnimationV();
-            AnimatorSet animatorSet1 = getAnimatorSet(newAddView, "alpha", "translationX", 1, 0, mWidth/2+60);
-            currentSub--;
-            Toast.makeText(MainActivity.this,"id:"+newAddView.getId(),Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AnimatorSet animatorSet1 = getAnimatorSet(newAddView, "alpha", "translationX", 1, 0, mWidth/2+60);
+                currentSub--;
+            }
+
 
         }
     }
