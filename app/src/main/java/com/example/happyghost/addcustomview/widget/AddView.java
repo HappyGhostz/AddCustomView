@@ -45,6 +45,9 @@ public class AddView extends View {
     private OnAddviewClickListener mListener;
     private boolean mIsGradient;
 
+
+    private boolean mVmoveOne;
+
     public AddView(Context context) {
         this(context,null);
     }
@@ -75,6 +78,8 @@ public class AddView extends View {
         mEndTime = typedArray.getInteger(R.styleable.AddCustomView_av_animation_time,2);
         //横线是否移动
         mHmove = typedArray.getBoolean(R.styleable.AddCustomView_av_moveH, false);
+        //竖线是否转一圈
+        mVmoveOne = typedArray.getBoolean(R.styleable.AddCustomView_av_moveV_one, false);
         //是否设置边框颜色渐变（2种之间）
         mIsGradient = typedArray.getBoolean(R.styleable.AddCustomView_av_isGradient, true);
         typedArray.recycle();
@@ -215,9 +220,16 @@ public class AddView extends View {
 
 
     public void startAnimationV(){
-        mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", mDisAngle, mDisAngle+90);
-        mAngleV1Animator.setDuration(mEndTime*1000);
-        mAngleV1Animator.start();
+        if(mVmoveOne){
+            mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", 0, 360);
+            mAngleV1Animator.setDuration(mEndTime*1000);
+            mAngleV1Animator.start();
+        }else {
+            mAngleV1Animator = ObjectAnimator.ofFloat(this, "mAngleV1", mDisAngle, mDisAngle+90);
+            mAngleV1Animator.setDuration(mEndTime*1000);
+            mAngleV1Animator.start();
+        }
+
         if(mHmove){
             mAngleH1Animator = ObjectAnimator.ofFloat(this, "mAngleH1", 0, 360);
             mAngleH1Animator.setDuration(mEndTime*1000);
@@ -325,6 +337,13 @@ public class AddView extends View {
 
     public void setmIsGradient(boolean mIsGradient) {
         this.mIsGradient = mIsGradient;
+    }
+    public boolean ismVmoveOne() {
+        return mVmoveOne;
+    }
+
+    public void setmVmoveOne(boolean mVmoveOne) {
+        this.mVmoveOne = mVmoveOne;
     }
 
 

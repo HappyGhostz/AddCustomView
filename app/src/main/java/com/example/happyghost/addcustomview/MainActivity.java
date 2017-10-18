@@ -1,23 +1,22 @@
 package com.example.happyghost.addcustomview;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 
 import com.example.happyghost.addcustomview.widget.AddView;
 
@@ -27,7 +26,13 @@ public class MainActivity extends AppCompatActivity {
     private AddView mAddView;
     private int mWidth;
     private int currentAdd = 0;
-//    private RelativeLayout mAddContain;
+    private int currentSub ;
+    private int width;
+    private int height;
+    private boolean isFrist = true;
+    private EditText addTextView;
+    private Button button;
+    //    private RelativeLayout mAddContain;
 
 
     @Override
@@ -43,41 +48,36 @@ public class MainActivity extends AppCompatActivity {
         mContanter = (LinearLayout) findViewById(R.id.contanter);
 //        mAddContain = (RelativeLayout) findViewById(R.id.addContain);
         mAddView = (AddView) findViewById(R.id.addview);
+        button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(addTextView!=null&& addTextView.getId()!=-1){
+                    EditText editText = (EditText) findViewById(1 * 100000);
+                    String fristText = editText.getText().toString();
+                    button.setText(fristText);
+                }
+            }
+        });
+
+
     }
 
     private void initData() {
+        mAddView.setMAngleV1(360);
         mAddView.setOnAddviewClickListener(new AddView.OnAddviewClickListener() {
-
-            private int height;
-            private int anInt;
 
             @Override
             public void onAddViewClick() {
 
                 getSubView();
                 TextView addTextView = (TextView) getAddView();
-//                int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-//                int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-//                addTextView.measure(w, h);
-//                int width =addTextView.getMeasuredWidth();
-//                int height =addTextView.getMeasuredHeight();
+                if(isFrist){
+                    getValueAnmition(currentSub*60,60*(1+currentSub));
+                }else {
+                    getValueAnmition(currentSub*50+10,50*(1+currentSub)+10);
+                }
 
-
-
-
-                anInt = addTextView.getMeasuredHeight();
-                height = (int) mAddView.getHeight()+anInt;
-                //(猜想)这个50应该是addView的高度（xml里的设置），比这个大或小都会出现addview距离新增加的view变大或变小
-                ValueAnimator valueAnimator = ValueAnimator.ofFloat(currentAdd*60,60*(1+currentAdd));
-                valueAnimator.setTarget(mAddView);
-                valueAnimator.setDuration(2000);
-                valueAnimator.start();
-                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        mAddView.setTranslationY((float) animation.getAnimatedValue());
-                    }
-                });
 //                int[] a1 = new int[2];
 //                mAddView.getLocationInWindow(a1);
 //                int x1 = a1[0];
@@ -86,7 +86,21 @@ public class MainActivity extends AppCompatActivity {
 //                Log.e("addview::","currentAdd*height:"+currentAdd*height);
                 Log.e("addview::","-mAddView.getHeight():"+-mAddView.getHeight());
                 currentAdd++;
+                currentSub++;
+                isFrist=false;
+            }
+        });
+    }
 
+    private void getValueAnmition(float value1,float value2) {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(value1,value2);
+        valueAnimator.setTarget(mAddView);
+        valueAnimator.setDuration(2000);
+        valueAnimator.start();
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mAddView.setTranslationY((float) animation.getAnimatedValue());
             }
         });
     }
@@ -98,37 +112,99 @@ public class MainActivity extends AppCompatActivity {
         addView.setLayoutParams(layoutParams);
         addView.setmHmove(true);
         addView.startAnimationV();
+        addView.setId(currentAdd);
+        addView.setOnAddviewClickListener(new AddViewClick(addView));
         mContanter.addView(addView);
-        ObjectAnimator oject1 = ObjectAnimator.ofFloat(addView,"translationY",-50);
-        oject1.setDuration(1000);
+        ObjectAnimator oject1 = ObjectAnimator.ofFloat(addView,"translationY",-50*(1+currentAdd));
+        oject1.setDuration(500);
         ObjectAnimator oject2 = ObjectAnimator.ofFloat(addView,"translationX",-mWidth/2+60);
-        oject2.setDuration(1000);
+        oject2.setDuration(1500);
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(oject1,oject2);
+//        set.setDuration(2000);
         set.start();
-
 //        addView.animate().alpha(1)
 //                .translationX(-mWidth/2+60).setDuration(2000).start();
     }
 
     @NonNull
     private View getAddView() {
-        final TextView addTextView = new TextView(MainActivity.this);
+        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+
+        addTextView = new EditText(MainActivity.this);
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(360,50);
         params1.gravity = Gravity.CENTER_HORIZONTAL;
         addTextView.setLayoutParams(params1);
         addTextView.setBackgroundColor(Color.parseColor("#FF4081"));
         addTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        addTextView.setText("新成员");
+        addTextView.setId((currentAdd+1)*100000);//扩大一下ID以免和Addview的id造成冲突
+        addTextView.setHint("编号:"+ addTextView.getId()+"请输入内容:");
+//        addTextView.setText("新成员");
         mContanter.addView(addTextView);
-        addTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"xin cheng yuan"+currentAdd,Toast.LENGTH_SHORT).show();
-            }
-        });
-        addTextView.animate().translationY(-100).alpha(1).setDuration(2000).start();
+
+        addTextView.measure(w, h);
+        width = addTextView.getMeasuredWidth();
+        height = addTextView.getMeasuredHeight();
+        if(isFrist){
+            getAnimatorSet(addTextView,"alpha","translationY",0,1,-100);
+        }else {
+            getAnimatorSet(addTextView,"alpha","translationY",0,1,-100*(currentAdd+1)+50*currentAdd);
+        }
+
         return addTextView;
+    }
+    //比较懒
+    private AnimatorSet getAnimatorSet(View view, String fristProperty, String secondProperty, float float1, float float2, float float3) {
+        ObjectAnimator oject1 = ObjectAnimator.ofFloat(view,fristProperty,float1,float2);
+        ObjectAnimator oject2 = ObjectAnimator.ofFloat(view,secondProperty,float3);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(oject1,oject2);
+        set.setDuration(2000);
+        set.start();
+        return set;
+    }
+
+    public class AddViewClick implements AddView.OnAddviewClickListener{
+
+        private final AddView newAddView;
+        public AddViewClick(AddView addView){
+            this.newAddView = addView;
+        }
+
+        @Override
+        public void onAddViewClick() {
+            int id = newAddView.getId();
+            final EditText viewById = (EditText)findViewById((id+1) * 100000);
+            AnimatorSet animatorSet = getAnimatorSet(viewById, "alpha", "translationY", 1, 0, 50);
+            animatorSet.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    viewById.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            getValueAnmition(50*(1+currentSub)+10-50,currentSub*50+10-50);
+            mAddView.startAnimationV();
+            AnimatorSet animatorSet1 = getAnimatorSet(newAddView, "alpha", "translationX", 1, 0, mWidth/2+60);
+            currentSub--;
+            Toast.makeText(MainActivity.this,"id:"+newAddView.getId(),Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 }

@@ -7,27 +7,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/contanter"
     tools:context="com.example.happyghost.addcustomview.MainActivity">
-    <TextView
-        android:layout_gravity="center_horizontal"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="#FF4081"
-        android:text="快使用双截棍，哼哼哈嘿-。。"/>
-
-    <com.example.happyghost.addcustomview.widget.AddView
-        android:id="@+id/addview"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        app:av_arc_size = "3sp"
-        app:av_moveH="true"
-        app:av_line_size = "3sp"
-        app:av_animation_time ="1"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
+            android:orientation="vertical"
+            android:id="@+id/contanter"
+            tools:context="com.example.happyghost.addcustomview.MainActivity">
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="360dp"
+                android:layout_height="50dp"
+                android:background="#FF4081"
+                android:text="快使用双截棍，哼哼哈嘿-。。"/>
+
+            <com.example.happyghost.addcustomview.widget.AddView
+                android:id="@+id/addview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                app:av_arc_size = "3sp"
+                app:av_moveH="true"
+                app:av_line_size = "3sp"
+                app:av_animation_time ="1"
+                app:av_moveV_one = "true"/>
+       </LinearLayout>
+    </ScrollView>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="获取EditText内容"/>
 </LinearLayout>
 
