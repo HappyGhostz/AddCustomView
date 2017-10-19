@@ -216,13 +216,19 @@ public class AddView extends View {
         float cosH =(float) Math.cos(mAngleH1*Math.PI/180);
 
 
+        //横线
         canvas.drawLine(mRadius*(1-cosH*3/5),mRadius*(1-sinH*3/5),mRadius*(1+cosH*3/5),mRadius*(1+sinH*3/5),mLinePaint);
+        //竖线
         canvas.drawLine(mRadius*(1+sinV*3/5), mRadius*(1-cosV*3/5) ,mRadius*(1-sinV*3/5),mRadius*(1+cosV*3/5),mLinePaint);
-        int x1 = (int) (mRadius * (1 - cosH * 3 / 5));
+        int x_1 = (int) (mRadius*(1+cosH*3/5));
+        int y_1 = (int) (mRadius*(1+sinH*3/5));
+
+        int x_2 = (int) (mRadius*(1-cosH*3/5));
+        int y_2 = (int) (mRadius*(1-sinH*3/5));
+
         int x2 = (int) (mRadius*(1+sinV*3/5));
-        int y1 = (int) (mRadius*(1-sinH*3/5));
         int y2 = (int) (mRadius*(1-cosV*3/5));
-        if(x1==x2&&y1==y2){
+        if((x_1==x2&&y_1==y2)||(x_2==x2&&y_2==y2)){
             isAdd=false;
         }else {
             isAdd=true;
@@ -250,10 +256,10 @@ public class AddView extends View {
             mAngleH1Animator.setDuration(mEndTime*1000);
             mAngleH1Animator.start();
         }
-        mSubDis = mSubDis+90;
         mDisAngle = mDisAngle+90;
     }
     public void setMAngleV1(float mAngleV){
+        this.mDisAngle = mAngleV;
         this.mAngleV1 = mAngleV;
         invalidate();
     }

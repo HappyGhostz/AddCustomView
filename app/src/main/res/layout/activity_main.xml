@@ -37,8 +37,10 @@
                 app:av_arc_size = "3sp"
                 app:av_moveH="true"
                 app:av_line_size = "3sp"
-                app:av_animation_time ="1"
-                app:av_moveV_one = "true"/>
+                app:av_animation_time ="2"
+                app:av_moveV_one = "true"
+                />
+
        </LinearLayout>
     </ScrollView>
     <Button
