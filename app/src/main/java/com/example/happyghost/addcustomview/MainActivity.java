@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFrist = true;
     private EditText addTextView;
     private Button button;
+    private int subViewHeight;
+    private int addViewHeight;
+    private int mAddViewStartY;
+    private int mNewAddViewStartY;
+    private int mNewSubView;
     //    private RelativeLayout mAddContain;
 
 
@@ -65,7 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData() {
         mAddView.setMAngleV1(360);
+        getMeasureWH(mAddView);
+        addViewHeight = mAddView.getMeasuredHeight();
+        int[] a1 = new int[2];
+        mAddView.getLocationInWindow(a1);
+        mAddViewStartY = a1[1];
+        Log.e("addview::","mAddViewStartY:"+mAddViewStartY);
+        Log.e("addview::","addViewHeight:"+addViewHeight);
         mAddView.setOnAddviewClickListener(new AddView.OnAddviewClickListener() {
+
+            private int paddingTop;
 
             @Override
             public void onAddViewClick() {
@@ -73,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
                 getSubView();
                 TextView addTextView = (TextView) getAddView();
                 if(isFrist){
-                    getValueAnmition(currentSub*60,60*(1+currentSub));
+                    paddingTop = mAddView.getPaddingTop();
+                    getValueAnmition(0,mNewSubView-mAddViewStartY);
+//                    getValueAnmition(currentSub*60,60*(1+currentSub));
                 }else {
                     getValueAnmition(currentSub*50+10,50*(1+currentSub)+10);
                 }
@@ -96,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(value1,value2);
         valueAnimator.setTarget(mAddView);
         valueAnimator.setDuration(2000);
-        valueAnimator.start();
+//        valueAnimator.start();
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -114,23 +130,31 @@ public class MainActivity extends AppCompatActivity {
         addView.startAnimationV();
         addView.setId(currentAdd);
         addView.setOnAddviewClickListener(new AddViewClick(addView));
+        getMeasureWH(addView);
+        subViewHeight = addView.getMeasuredHeight();
+        int[] a1 = new int[2];
+        addView.getLocationInWindow(a1);
+        mNewSubView = a1[1];
+
+        Log.e("addview::","subViewHeight:"+subViewHeight);
+        Log.e("addview::","mNewSubView:"+mNewSubView);
         mContanter.addView(addView);
-        ObjectAnimator oject1 = ObjectAnimator.ofFloat(addView,"translationY",-50*(1+currentAdd));
+//        ObjectAnimator oject1 = ObjectAnimator.ofFloat(addView,"translationY",-50*(1+currentAdd));
+        ObjectAnimator oject1 = ObjectAnimator.ofFloat(addView,"translationY",-addViewHeight);
         oject1.setDuration(500);
         ObjectAnimator oject2 = ObjectAnimator.ofFloat(addView,"translationX",-mWidth/2+60);
         oject2.setDuration(1500);
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(oject1,oject2);
 //        set.setDuration(2000);
-        set.start();
+//        set.start();
 //        addView.animate().alpha(1)
 //                .translationX(-mWidth/2+60).setDuration(2000).start();
     }
 
     @NonNull
     private View getAddView() {
-        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+
 
         addTextView = new EditText(MainActivity.this);
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(360,50);
@@ -142,18 +166,29 @@ public class MainActivity extends AppCompatActivity {
         addTextView.setHint("编号:"+ addTextView.getId()+"请输入内容:");
 //        addTextView.setText("新成员");
         mContanter.addView(addTextView);
-
-        addTextView.measure(w, h);
+        getMeasureWH(addTextView);
         width = addTextView.getMeasuredWidth();
         height = addTextView.getMeasuredHeight();
+        int[] a1 = new int[2];
+        addTextView.getLocationInWindow(a1);
+        mNewAddViewStartY = a1[1];
+        Log.e("addview::","mNewAddViewStartY:"+mNewAddViewStartY);
+        Log.e("addview::","height:"+height);
         if(isFrist){
-            getAnimatorSet(addTextView,"alpha","translationY",0,1,-100);
+            getAnimatorSet(addTextView,"alpha","translationY",0,1,-(mNewAddViewStartY-mAddViewStartY));
         }else {
             getAnimatorSet(addTextView,"alpha","translationY",0,1,-100*(currentAdd+1)+50*currentAdd);
         }
 
         return addTextView;
     }
+
+    private void getMeasureWH(View addView) {
+        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        addView.measure(w, h);
+    }
+
     //比较懒
     private AnimatorSet getAnimatorSet(View view, String fristProperty, String secondProperty, float float1, float float2, float float3) {
         ObjectAnimator oject1 = ObjectAnimator.ofFloat(view,fristProperty,float1,float2);
@@ -161,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(oject1,oject2);
         set.setDuration(2000);
-        set.start();
+//        set.start();
         return set;
     }
     private AnimatorSet animatorSet;
@@ -207,6 +242,27 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 AnimatorSet animatorSet1 = getAnimatorSet(newAddView, "alpha", "translationX", 1, 0, mWidth/2+60);
+                animatorSet1.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                          newAddView.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
                 currentSub--;
             }
 
